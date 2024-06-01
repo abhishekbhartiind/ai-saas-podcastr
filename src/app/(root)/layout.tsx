@@ -1,12 +1,14 @@
+import LeftSidebar from "@/components/LeftSidebar"
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
   return (
-    <div>
-      <main>
-        <div>Left</div>
+    <div className="relative flex flex-col">
+      <main className="relative flex bg-black-3">
+        <LeftSidebar />
         {children}
         <div>Right</div>
       </main>
