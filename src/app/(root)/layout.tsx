@@ -1,6 +1,7 @@
 import Image from "next/image"
 import LeftSidebar from "@/components/LeftSidebar"
 import { Toaster } from "@/components/ui/toaster"
+import RightSidebar from "@/components/RightSidebar"
 
 export default function RootLayout({
   children,
@@ -29,7 +30,7 @@ export default function RootLayout({
             </div>
           </div>
         </section>
-        <div>Right</div>
+        <RightSidebar />
       </main>
     </div>
   )
