@@ -51,26 +51,24 @@ http.route({
   handler: handleClerkWebhook,
 })
 
-async function validateRequest(
+const validateRequest = async (
   req: Request
-): Promise<WebhookEvent | undefined> {
+): Promise<WebhookEvent | undefined> => {
+  // TODO: Update CLERK_WEBHOOK_SECRET
+  const webhookSecret = process.env.CLERK_WEBHOOK_SECRET!
+  if (!webhookSecret) {
+    throw new Error("CLERK_WEBHOOK_SECRET is not defined")
+  }
   const payloadString = await req.text()
-
+  const headerPayload = req.headers
   const svixHeaders = {
-    "svix-id": req.headers.get("svix-id")!,
-    "svix-timestamp": req.headers.get("svix-timestamp")!,
-    "svix-signature": req.headers.get("svix-signature")!,
+    "svix-id": headerPayload.get("svix-id")!,
+    "svix-timestamp": headerPayload.get("svix-timestamp")!,
+    "svix-signature": headerPayload.get("svix-signature")!,
   }
   const wh = new Webhook(webhookSecret)
-  let evt: Event | null = null
-  try {
-    evt = wh.verify(payloadString, svixHeaders) as Event
-  } catch (_) {
-    console.log("error verifying")
-    return
-  }
-
-  return evt as unknown as WebhookEvent
+  const event = wh.verify(payloadString, svixHeaders)
+  return event as unknown as WebhookEvent
 }
 
 export default http
